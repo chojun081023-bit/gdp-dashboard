@@ -1,6 +1,6 @@
 ---
 name: learning-loop
-description: Run this every time you finish a task in this repository (a feature addition, bug fix, test, or review) — before the final report. Also use it right away when the user corrects you, when you hit a blocker and change approach, or when you find a new project rule. Records lessons in .claude/learnings/INBOX.md and proposes promotion candidates to the user.
+description: Run this every time you finish a task in this repository (a feature addition, bug fix, test, or review) — before the final report. Also use it right away when the user corrects you (e.g. "아니", "그게 아니라", "틀렸어", "다시 해", "더 짧게"), when you hit a blocker and change approach, or when you find a new project rule. Records lessons in .claude/learnings/INBOX.md and proposes promotion candidates to the user.
 ---
 
 # Learning loop

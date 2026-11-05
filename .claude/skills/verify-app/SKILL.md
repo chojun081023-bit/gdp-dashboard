@@ -1,6 +1,6 @@
 ---
 name: verify-app
-description: Use after any change to streamlit_app.py, data/, or requirements*.txt, and before reporting a feature addition or bug fix as done — runs tests, lint, and a headless run of the actual app, then checks the rendered page for exceptions. Also use when the user asks to run, check, screenshot, or "see if the dashboard works".
+description: Use after any change to streamlit_app.py, tests/, data/, pyproject.toml, or requirements*.txt, and before committing or reporting a feature addition or bug fix as done — runs tests, lint, and a headless run of the actual app, then checks the rendered page for exceptions. Also use when the user asks to run, check, screenshot, or "see if the dashboard works".
 ---
 
 # Verify the app
