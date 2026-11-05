@@ -1,16 +1,18 @@
-import streamlit as st
-import pandas as pd
 import math
 from pathlib import Path
+
+import pandas as pd
+import streamlit as st
 
 # Set the title and favicon that appear in the Browser's tab bar.
 st.set_page_config(
     page_title='GDP dashboard',
-    page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
+    page_icon=':earth_americas:',  # This is an emoji shortcode. Could be a URL too.
 )
 
 # -----------------------------------------------------------------------------
 # Declare some useful functions.
+
 
 @st.cache_data
 def get_gdp_data():
@@ -22,7 +24,7 @@ def get_gdp_data():
     """
 
     # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
-    DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
+    DATA_FILENAME = Path(__file__).parent / 'data/gdp_data.csv'
     raw_gdp_df = pd.read_csv(DATA_FILENAME)
 
     MIN_YEAR = 1960
@@ -57,19 +59,20 @@ def get_gdp_data():
 
     return gdp_df
 
+
 gdp_df = get_gdp_data()
 
 # -----------------------------------------------------------------------------
 # Draw the actual page
 
 # Set the title that appears at the top of the page.
-'''
+"""
 # :earth_americas: GDP dashboard
 
 Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
 notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
 But it's otherwise a great (and did I mention _free_?) source of data.
-'''
+"""
 
 # Add some spacing
 ''
@@ -82,17 +85,17 @@ from_year, to_year = st.slider(
     'Which years are you interested in?',
     min_value=min_value,
     max_value=max_value,
-    value=[min_value, max_value])
+    value=[min_value, max_value],
+)
 
 countries = gdp_df['Country Code'].unique()
 
 if not len(countries):
-    st.warning("Select at least one country")
+    st.warning('Select at least one country')
 
 selected_countries = st.multiselect(
-    'Which countries would you like to view?',
-    countries,
-    ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
+    'Which countries would you like to view?', countries, ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN']
+)
 
 ''
 ''
@@ -144,8 +147,5 @@ for i, country in enumerate(selected_countries):
             delta_color = 'normal'
 
         st.metric(
-            label=f'{country} GDP',
-            value=f'{last_gdp:,.0f}B',
-            delta=growth,
-            delta_color=delta_color
+            label=f'{country} GDP', value=f'{last_gdp:,.0f}B', delta=growth, delta_color=delta_color
         )
