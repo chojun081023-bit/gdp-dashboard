@@ -5,9 +5,6 @@ description: Use after any change to streamlit_app.py, tests/, data/, pyproject.
 
 # Verify the app
 
-Source: the "inspect first, then act" pattern from `anthropics/skills` → `skills/webapp-testing/SKILL.md` (Apache-2.0, commit `ca45fc4`), rewritten.
-Not adopted: the original's `with_server.py` (it runs arbitrary commands with `shell=True`) and its "run without reading the source" guidance.
-
 ## Steps (stop at the first failure and report it)
 
 ```bash
