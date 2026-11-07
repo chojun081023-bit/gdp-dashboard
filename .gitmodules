@@ -1,0 +1,28 @@
+[submodule "external/ponytail"]
+	path = external/ponytail
+	url = https://github.com/DietrichGebert/ponytail.git
+	shallow = true
+[submodule "external/omniroute"]
+	path = external/omniroute
+	url = https://github.com/cheaper-inference/OmniRoute.git
+	shallow = true
+[submodule "external/graphify"]
+	path = external/graphify
+	url = https://github.com/Graphify-Labs/graphify.git
+	shallow = true
+[submodule "external/agent-skills"]
+	path = external/agent-skills
+	url = https://github.com/anthropics/skills.git
+	shallow = true
+[submodule "external/orca"]
+	path = external/orca
+	url = https://github.com/stablyai/orca.git
+	shallow = true
+[submodule "external/headroom"]
+	path = external/headroom
+	url = https://github.com/headroomlabs-ai/headroom.git
+	shallow = true
+[submodule "external/aside-skills"]
+	path = external/aside-skills
+	url = https://github.com/anthonycho-ux/aside-skills.git
+	shallow = true
