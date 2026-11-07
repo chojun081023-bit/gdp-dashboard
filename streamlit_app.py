@@ -1,6 +1,6 @@
-import math
 from pathlib import Path
 
+import altair as alt
 import pandas as pd
 import streamlit as st
 
@@ -8,7 +8,11 @@ import streamlit as st
 st.set_page_config(
     page_title='GDP dashboard',
     page_icon=':earth_americas:',  # This is an emoji shortcode. Could be a URL too.
+    layout='centered',
 )
+
+# Touch-target, input-size and reduced-motion fixes Streamlit's theme options can't express.
+st.html(Path(__file__).parent / 'assets/mobile.css')
 
 # -----------------------------------------------------------------------------
 # Declare some useful functions.
@@ -63,89 +67,74 @@ def get_gdp_data():
 gdp_df = get_gdp_data()
 
 # -----------------------------------------------------------------------------
-# Draw the actual page
+# Draw the actual page (mobile first: key numbers, then chart, filters tucked away)
 
-# Set the title that appears at the top of the page.
-"""
-# :earth_americas: GDP dashboard
+st.title(':earth_americas: GDP dashboard', anchor=False)
+st.markdown('World Bank Open Data, 1960–2022. Some years are missing for some countries.')
 
-Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
-notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
-But it's otherwise a great (and did I mention _free_?) source of data.
-"""
-
-# Add some spacing
-''
-''
-
-min_value = gdp_df['Year'].min()
-max_value = gdp_df['Year'].max()
-
-from_year, to_year = st.slider(
-    'Which years are you interested in?',
-    min_value=min_value,
-    max_value=max_value,
-    value=[min_value, max_value],
-)
-
+min_value = int(gdp_df['Year'].min())
+max_value = int(gdp_df['Year'].max())
 countries = gdp_df['Country Code'].unique()
+DEFAULT_COUNTRIES = ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN']
 
-if not len(countries):
-    st.warning('Select at least one country')
+with st.expander('Filters', icon=':material/tune:'):
+    from_year, to_year = st.slider(
+        'Years',
+        min_value=min_value,
+        max_value=max_value,
+        value=(min_value, max_value),
+    )
+    selected_countries = st.multiselect('Countries', countries, DEFAULT_COUNTRIES)
 
-selected_countries = st.multiselect(
-    'Which countries would you like to view?', countries, ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN']
+st.caption(f'{from_year}–{to_year} · {len(selected_countries)} countries')
+
+if not selected_countries:
+    st.warning('Select at least one country in Filters.')
+    st.stop()
+
+# GDP in billions, one row per year, one column per country: every lookup below is O(1).
+gdp_b = (
+    gdp_df[gdp_df['Country Code'].isin(selected_countries)]
+    .pivot(index='Year', columns='Country Code', values='GDP')
+    .loc[from_year:to_year, selected_countries]
+    / 1e9
 )
 
-''
-''
-''
+st.subheader(f'GDP in {to_year}', divider='gray', anchor=False)
 
-# Filter the data
-filtered_gdp_df = gdp_df[
-    (gdp_df['Country Code'].isin(selected_countries))
-    & (gdp_df['Year'] <= to_year)
-    & (from_year <= gdp_df['Year'])
-]
+# Wrapping row instead of st.columns: columns stack one per line on phones, this keeps 2 per row.
+with st.container(horizontal=True, gap='small'):
+    for country in selected_countries:
+        first_gdp, last_gdp = gdp_b[country].loc[from_year], gdp_b[country].loc[to_year]
 
-st.header('GDP over time', divider='gray')
-
-''
-
-st.line_chart(
-    filtered_gdp_df,
-    x='Year',
-    y='GDP',
-    color='Country Code',
-)
-
-''
-''
-
-
-first_year = gdp_df[gdp_df['Year'] == from_year]
-last_year = gdp_df[gdp_df['Year'] == to_year]
-
-st.header(f'GDP in {to_year}', divider='gray')
-
-''
-
-cols = st.columns(4)
-
-for i, country in enumerate(selected_countries):
-    col = cols[i % len(cols)]
-
-    with col:
-        first_gdp = first_year[first_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-        last_gdp = last_year[last_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-
-        if math.isnan(first_gdp):
-            growth = 'n/a'
-            delta_color = 'off'
+        if pd.isna(first_gdp) or pd.isna(last_gdp):
+            growth, delta_color, arrow = 'n/a', 'off', 'off'
         else:
-            growth = f'{last_gdp / first_gdp:,.2f}x'
-            delta_color = 'normal'
+            growth, delta_color, arrow = f'{last_gdp / first_gdp:,.2f}x', 'normal', 'auto'
 
         st.metric(
-            label=f'{country} GDP', value=f'{last_gdp:,.0f}B', delta=growth, delta_color=delta_color
+            label=country,
+            value='n/a' if pd.isna(last_gdp) else f'{last_gdp:,.0f}B',
+            delta=growth,
+            delta_color=delta_color,
+            delta_arrow=arrow,
+            border=True,
+            width='stretch',
         )
+
+st.subheader('GDP over time', divider='gray', anchor=False)
+
+# Altair (ships with Streamlit) for plain year ticks and a legend that wraps on narrow screens.
+chart_df = gdp_b.reset_index().melt('Year', var_name='Country', value_name='GDP')
+chart = (
+    alt.Chart(chart_df)
+    .mark_line()
+    .encode(
+        x=alt.X('Year:Q', axis=alt.Axis(format='d', title=None)),
+        y=alt.Y('GDP:Q', title='GDP (billion USD)'),
+        color=alt.Color('Country:N', legend=alt.Legend(orient='bottom', columns=3, title=None)),
+        tooltip=['Country', 'Year', alt.Tooltip('GDP:Q', format=',.0f')],
+    )
+    .properties(height=320)
+)
+st.altair_chart(chart)

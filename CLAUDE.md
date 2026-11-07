@@ -24,7 +24,8 @@ streamlit run streamlit_app.py --server.headless true   # http://localhost:8501,
   anthropics/skills, orca, headroom, aside-skills). `scripts/link-external-skills.sh` links their skills into `~/.claude/skills`.
 
 - `streamlit_app.py`: the entire app. `get_gdp_data()` (`@st.cache_data`) reads `data/gdp_data.csv`, then
-  `melt`s the wide format (one column per year) into long format (`Country Code`, `Year`, `GDP`) → year slider and country multiselect → line chart and `st.metric` cards.
+  `melt`s the wide format (one column per year) into long format (`Country Code`, `Year`, `GDP`) → collapsible Filters (year slider, country multiselect) → wrapping `st.metric` cards → Altair line chart.
+  Theme lives in `.streamlit/config.toml`.
 - `data/gdp_data.csv`: World Bank `NY.GDP.MKTP.CD`, 1960–2022, 266 countries/regions. Many missing values (NaN).
 - `tests/`: smoke tests. Data logic is not split into functions yet, so unit tests come later, after refactoring.
 

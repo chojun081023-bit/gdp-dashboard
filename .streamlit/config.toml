@@ -1,0 +1,18 @@
+# Light and dark both defined so the app follows the phone's system setting.
+# Setting [theme] keys alone forces a light theme, even in dark mode.
+[theme]
+baseRadius = "medium"
+# Plain rem only: Streamlit ignores clamp() here. Fluid sizes are in assets/mobile.css.
+headingFontSizes = ["2.25rem", "1.4rem", "1.1rem"]  # h1: max of the clamp in mobile.css
+metricValueFontSize = "1.75rem"  # max of the clamp in mobile.css
+paddingTop = "1.5rem"
+
+[theme.light]
+primaryColor = "#0F766E"
+
+[theme.dark]
+primaryColor = "#2DD4BF"
+
+[client]
+# Hides the developer-only Deploy button and dev menu items on the phone header.
+toolbarMode = "minimal"
