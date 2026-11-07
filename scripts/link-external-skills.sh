@@ -28,9 +28,13 @@ link() { # link <skill-dir> <name>
   if [ -e "$DEST/$name" ] || [ -L "$DEST/$name" ]; then return 0; fi
   ln -s "$src" "$DEST/$name" && echo "linked $name"
 }
+# OmniRoute/orca skills need a running OmniRoute server / Orca app, so they are fetched but not linked.
+# docx/pdf/pptx/xlsx/skill-creator are skipped: the claude.ai-synced skills already provide them.
+DUP=" docx pdf pptx xlsx skill-creator "
 for d in external/ponytail/skills/* external/agent-skills/skills/* external/headroom/skills/* \
-         external/orca/skills/* external/omniroute/skills/* external/aside-skills/*/*; do
-  [ -d "$d" ] && link "$ROOT/$d" "$(basename "$d")"
+         external/aside-skills/*/*; do
+  n="$(basename "$d")"; case "$DUP" in *" $n "*) continue;; esac
+  [ -d "$d" ] && link "$ROOT/$d" "$n"
 done
 # graphify ships its Claude skill as graphify/skill.md + skills/claude/references
 G="$ROOT/external/graphify/graphify"

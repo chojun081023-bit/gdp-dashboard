@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 description: Verify the app — ruff, pytest, and headless render check
 ---
 
