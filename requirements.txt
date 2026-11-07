@@ -1,2 +1,2 @@
-streamlit
+streamlit>=1.67  # [theme.light]/[theme.dark], st.html(Path), horizontal containers
 pandas

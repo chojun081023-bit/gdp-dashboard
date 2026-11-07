@@ -1,0 +1,89 @@
+/*
+ * Mobile touch and readability fixes on top of Streamlit's own styles.
+ * Selectors use only data-testid and ARIA attributes: Streamlit's generated class names change per release.
+ * No media queries needed: every rule here is safe at all widths.
+ */
+
+/* Fluid type: smaller on phones, unchanged feel on desktop. */
+.stApp [data-testid='stHeading'] h1 {
+  font-size: clamp(1.6rem, 1.2rem + 2vw, 2.25rem);
+}
+
+.stApp [data-testid='stMetricValue'] {
+  font-size: clamp(1.25rem, 1rem + 1.2vw, 1.75rem);
+}
+
+/* iOS zooms the page when a focused input is under 16px (the country search box is 14px). */
+.stApp input,
+.stApp textarea,
+.stApp select {
+  font-size: max(16px, 1rem);
+}
+
+/* Touch targets: grow the hit area with ::after, so the visual design stays unchanged. */
+.stApp [data-testid='stMultiSelectTagsContainer'] button[aria-label^='Remove'],
+.stApp button[aria-label='Clear all'],
+.stApp button[aria-label='Open'],
+.stApp [data-testid='stSlider'] div:has(> div > input[type='range']) {
+  position: relative;
+}
+
+.stApp [data-testid='stMultiSelectTagsContainer'] button[aria-label^='Remove']::after,
+.stApp button[aria-label='Clear all']::after,
+.stApp button[aria-label='Open']::after,
+.stApp [data-testid='stSlider'] div:has(> div > input[type='range'])::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
+/*
+ * Neighbouring controls grow only vertically, so their hit areas never cover each other:
+ * Clear all sits next to Open (a stray tap would wipe the selection), and the two slider thumbs can touch.
+ */
+.stApp button[aria-label='Clear all']::after,
+.stApp button[aria-label='Open']::after {
+  width: max(100%, 24px);
+}
+
+/* Thumbs stay their own width: any wider and the end thumb steals drags from a nearby start thumb. */
+.stApp [data-testid='stSlider'] div:has(> div > input[type='range'])::after {
+  width: 100%;
+}
+
+/* Chip remove buttons sit next to each other: 28px keeps the 8px gap rule (WCAG 2.2 min is 24px). */
+.stApp [data-testid='stMultiSelectTagsContainer'] button[aria-label^='Remove']::after {
+  width: 28px;
+  height: 28px;
+}
+
+.stApp [data-testid='stExpander'] summary {
+  min-height: 44px;
+}
+
+.stApp button,
+.stApp summary,
+.stApp [data-testid='stSlider'] {
+  touch-action: manipulation; /* no 300ms double-tap-zoom delay */
+}
+
+/* Long labels wrap instead of pushing the card row wider than the screen. */
+.stApp [data-testid='stMetric'] {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stApp *,
+  .stApp *::before,
+  .stApp *::after {
+    animation-duration: 0.01ms !important; /* must beat Streamlit's inline transition styles */
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

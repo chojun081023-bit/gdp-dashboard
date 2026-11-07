@@ -11,6 +11,9 @@ st.set_page_config(
     layout='centered',
 )
 
+# Touch-target, input-size and reduced-motion fixes Streamlit's theme options can't express.
+st.html(Path(__file__).parent / 'assets/mobile.css')
+
 # -----------------------------------------------------------------------------
 # Declare some useful functions.
 
@@ -66,8 +69,8 @@ gdp_df = get_gdp_data()
 # -----------------------------------------------------------------------------
 # Draw the actual page (mobile first: key numbers, then chart, filters tucked away)
 
-st.title(':earth_americas: GDP dashboard')
-st.caption('World Bank Open Data, 1960–2022. Some years are missing for some countries.')
+st.title(':earth_americas: GDP dashboard', anchor=False)
+st.markdown('World Bank Open Data, 1960–2022. Some years are missing for some countries.')
 
 min_value = int(gdp_df['Year'].min())
 max_value = int(gdp_df['Year'].max())
@@ -97,7 +100,7 @@ gdp_b = (
     / 1e9
 )
 
-st.subheader(f'GDP in {to_year}', divider='gray')
+st.subheader(f'GDP in {to_year}', divider='gray', anchor=False)
 
 # Wrapping row instead of st.columns: columns stack one per line on phones, this keeps 2 per row.
 with st.container(horizontal=True, gap='small'):
@@ -119,7 +122,7 @@ with st.container(horizontal=True, gap='small'):
             width='stretch',
         )
 
-st.subheader('GDP over time', divider='gray')
+st.subheader('GDP over time', divider='gray', anchor=False)
 
 # Altair (ships with Streamlit) for plain year ticks and a legend that wraps on narrow screens.
 chart_df = gdp_b.reset_index().melt('Year', var_name='Country', value_name='GDP')
