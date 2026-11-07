@@ -23,3 +23,18 @@ def test_default_selection_renders_one_metric_per_country():
     selected = at.multiselect[0].value
     assert len(selected) == 6
     assert len(at.metric) == len(selected)
+
+
+def test_missing_gdp_shows_na_not_nan():
+    at = run_app()
+    at.multiselect[0].set_value(['AFG']).run()  # AFG has no 2022 value
+    assert not at.exception
+    assert at.metric[0].value == 'n/a'
+
+
+def test_empty_selection_warns_and_stops():
+    at = run_app()
+    at.multiselect[0].set_value([]).run()
+    assert not at.exception
+    assert len(at.warning) == 1
+    assert len(at.metric) == 0

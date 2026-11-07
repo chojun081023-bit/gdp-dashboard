@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#0F766E"
+baseRadius = "medium"
+headingFontSizes = ["1.75rem", "1.25rem", "1.1rem"]
+metricValueFontSize = "1.5rem"
+paddingTop = "1.5rem"
