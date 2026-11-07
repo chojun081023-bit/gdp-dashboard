@@ -17,8 +17,10 @@ for big in omniroute orca; do
     rm -rf "external/$big"
     git clone -q --depth 1 --filter=blob:none --sparse --no-checkout "$url" "external/$big"
     git -C "external/$big" sparse-checkout set skills
-    git -C "external/$big" fetch -q --depth 1 origin "$sha" || true
-    git -C "external/$big" checkout -q "$sha" 2>/dev/null || git -C "external/$big" checkout -q
+    # Pinned commit only: never fall back to the upstream branch tip (unreviewed skill text).
+    git -C "external/$big" fetch -q --depth 1 origin "$sha"
+    git -C "external/$big" checkout -q "$sha"
+    [ "$(git -C "external/$big" rev-parse HEAD)" = "$sha" ] || { echo "external/$big: not at pinned $sha" >&2; exit 1; }
   fi
 done
 mkdir -p "$DEST"
