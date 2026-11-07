@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 description: Review promotion candidates (🔺) in INBOX.md and propose concrete changes
 ---
 

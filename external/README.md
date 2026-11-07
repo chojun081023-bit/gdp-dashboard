@@ -21,6 +21,9 @@ scripts/link-external-skills.sh   # fetch submodules + symlink skills into ~/.cl
 
 - OmniRoute (~1.1 GB) and orca (~500 MB) are fetched sparse: only their `skills/` folder.
   For the full app: `git submodule update --init external/omniroute`.
+- OmniRoute and orca skills are fetched but **not linked** (they need a running OmniRoute server / Orca app).
+  Enable one when needed: `ln -s "$PWD/external/omniroute/skills/<name>" ~/.claude/skills/`.
+- `docx`, `pdf`, `pptx`, `xlsx`, `skill-creator` from anthropics/skills are skipped (already synced from claude.ai).
 - Only `SKILL.md` skills are linked. Hooks, plugins, status bands and MCP servers from these repos
   are **not** installed. If two repos ship a skill with the same folder name, the first one wins
   (order: ponytail, anthropics, headroom, orca, omniroute, aside, graphify).

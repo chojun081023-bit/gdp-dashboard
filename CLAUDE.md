@@ -45,6 +45,23 @@ streamlit run streamlit_app.py --server.headless true   # http://localhost:8501,
   except the approved third-party submodules in `external/` (see `external/README.md`). Do not edit files inside `external/`.
 - Adding attribution trailers (`Co-Authored-By`, "Generated with ...") to commits or PRs; turned off in `.claude/settings.json`.
 
+## Skill / command routing (call without being asked)
+
+| Situation | Call |
+|---|---|
+| Changed `streamlit_app.py`, `tests/`, `data/`, `pyproject.toml`, `requirements*.txt` | `verify-app` skill |
+| Feature added or bug fixed | `test-writer` subagent (regression test first for bugs) |
+| Before committing a code change, or a review is asked | `reviewer` subagent |
+| Task finished, user corrected you, or blocker hit | `learning-loop` skill |
+| 🔺 rows exist in INBOX | propose `/promote` to the user (user-only command) |
+
+`/learn`, `/verify`, `/promote` are user-typed shortcuts (`disable-model-invocation: true`); Claude uses the skills above instead.
+
+## Compact instructions
+
+When compacting, keep: current branch and PR, files changed, test/ruff results, pending approvals, open INBOX lessons.
+Drop: full tool outputs, file dumps, resolved errors.
+
 ## Learning loop
 
 Before finishing each task, follow the `learning-loop` skill: record in `.claude/learnings/INBOX.md` → propose promotion candidates → apply only after approval.

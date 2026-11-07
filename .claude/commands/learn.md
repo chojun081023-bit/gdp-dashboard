@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 description: Record a lesson in INBOX.md (optional argument: a description of the lesson)
 ---
 
