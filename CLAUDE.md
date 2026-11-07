@@ -65,3 +65,7 @@ Drop: full tool outputs, file dumps, resolved errors.
 ## Learning loop
 
 Before finishing each task, follow the `learning-loop` skill: record in `.claude/learnings/INBOX.md` → propose promotion candidates → apply only after approval.
+
+## 모바일/반응형 작업 규칙
+사용자가 휴대폰, 모바일, 스마트폰, 태블릿, 반응형, 화면 크기, 터치, viewport, 가로 스크롤, "폰에 맞게" 등과 관련된 작업을 요청하면,
+코드를 수정하기 전에 반드시 `mobile-optimize` 스킬을 먼저 호출하고 그 절차를 따른다. 사용자가 스킬 이름을 말하지 않아도 항상 적용한다.
