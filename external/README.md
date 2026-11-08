@@ -28,7 +28,7 @@ scripts/link-external-skills.sh   # fetch submodules + symlink skills into ~/.cl
   are **not** installed. If two repos ship a skill with the same folder name, the first one wins
   (order: ponytail, anthropics, headroom, orca, omniroute, aside, graphify).
 - CLIs (optional, not installed by the script): `uv tool install graphifyy && graphify install`,
-  `pip install headroom-ai`.
+  `pip install headroom-ai` (already in `requirements-dev.txt`, used by the `test-observer` skill).
 
 ## Update to upstream latest
 

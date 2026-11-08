@@ -2,3 +2,4 @@
 -r requirements.txt
 pytest==9.2.0
 ruff==0.17.3
+headroom-ai==0.43.1  # compresses long test output (test-observer skill)
