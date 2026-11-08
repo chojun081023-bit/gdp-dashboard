@@ -8,7 +8,7 @@ Streamlit dashboard showing World Bank GDP data (1960–2022). Python, Streamlit
 
 ```bash
 python3 -m venv .venv && . .venv/bin/activate
-pip install -r requirements-dev.txt   # app deps + pytest + ruff
+pip install -r requirements-dev.txt   # app deps + pytest + ruff + headroom-ai
 python -m pytest -q                   # smoke tests (streamlit.testing AppTest)
 ruff check . && ruff format --check . # lint + format check
 ruff check --fix . && ruff format .   # auto-fix
@@ -51,6 +51,7 @@ streamlit run streamlit_app.py --server.headless true   # http://localhost:8501,
 | Situation | Call |
 |---|---|
 | Changed `streamlit_app.py`, `tests/`, `data/`, `pyproject.toml`, `requirements*.txt` | `verify-app` skill |
+| Running tests, or "do tests pass / why did it fail" | `test-observer` skill (short report, long output compressed by headroom) |
 | Feature added or bug fixed | `test-writer` subagent (regression test first for bugs) |
 | Before committing a code change, or a review is asked | `reviewer` subagent |
 | Task finished, user corrected you, or blocker hit | `learning-loop` skill |
